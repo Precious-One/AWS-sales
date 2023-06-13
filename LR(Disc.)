@@ -1,0 +1,107 @@
+import pandas as pd 
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('SaaS-Sales.csv')
+
+df['Year']=df['Order Date'].str[-4:]
+
+df['Unit Price'] = (df['Sales']-df['Profit'])/df['Quantity']
+
+df1=df.drop(['Order Date','Customer ID','Customer','Country','Row ID','Contact Name','Order ID','City','License','Date Key'],axis = 1)
+
+# Calculate the mean target value for each category
+mean_target = df1.groupby('Region')['Discount'].mean()
+mean_target
+# Map the mean target to each category
+df1['Region_encoded'] = df1['Region'].map(mean_target)
+
+mean_target = df1.groupby('Subregion')['Discount'].mean()
+mean_target
+# Map the mean target to each category
+df1['Subregion_encoded'] = df1['Subregion'].map(mean_target)
+
+mean_target = df1.groupby('Segment')['Discount'].mean()
+mean_target
+# Map the mean target to each category
+df1['Segment_encoded'] = df1['Segment'].map(mean_target)
+
+mean_target = df1.groupby('Product')['Discount'].mean()
+mean_target
+# Map the mean target to each category
+df1['Product_encoded'] = df1['Product'].map(mean_target)
+
+mean_target = df1.groupby('Industry')['Discount'].mean()
+mean_target
+# Map the mean target to each category
+df1['Industry_encoded'] = df1['Industry'].map(mean_target)
+
+mean_target = df1.groupby('Year')['Discount'].mean()
+mean_target
+# Map the mean target to each category
+df1['Year_encoded'] = df1['Year'].map(mean_target)
+
+df1=df1.drop(['Region','Subregion','Industry','Segment','Product','Year'],axis = 1)
+
+Outlier Analysis
+
+# classified into categories 
+num=[]
+cat=[]
+for i in df1.columns:
+    if df1[i].dtype == 'O':
+        cat.append(i)
+    else:
+        num.append(i)
+        
+for i in num:
+    plt.figure
+    sns.boxplot(y=i,data=df1)
+  
+# replaced outlier with lower limit and upper limit
+for i in num:
+    q1 = df1[i].quantile(0.25)
+    q3 = df1[i].quantile(0.75)
+    iqr = q3-q1
+    ul = q3+ 1.5*iqr
+    ll = q1- 1.5*iqr
+    df1[i] = np.where(df1[i] < ll, ll, df1[i])
+    df1[i] = np.where(df1[i] > ul, ul, df1[i])
+    plt.figure()
+    sns.boxplot(y=i, data= df1)
+    
+import matplotlib.pyplot as plt
+plt.figure(figsize=(10,10))
+sns.heatmap(df1.corr(), cmap='Greens')
+
+LinearRegression
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+x= df1.drop('Discount',axis=1)
+y=df1['Discount']
+x_train,x_test,y_train,y_test = train_test_split(x,y, test_size=0.2, random_state=10)
+
+lr = LinearRegression()
+lr.fit(x_train,y_train)
+
+y_pred= lr.predict(x_test)
+y_pred
+
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn import datasets, linear_model, metrics
+r2_score = metrics.r2_score(y_test, y_pred) 
+r2_score
+
+# MSE
+mean_squared_error(y_test, y_pred)
+
+# Coefficients
+lr.coef_
+
+# Adjusted R2 score
+Adj_r2 = 1 - ((1 - r2_score) * (len(y_test) - 1)) / (len(y_test) - 10 - 1)
+Adj_r2
+
+
