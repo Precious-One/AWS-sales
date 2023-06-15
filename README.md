@@ -3,7 +3,7 @@ In this project, you able to see timeseries analysis, Geographic Analysis, Custo
 
 ## Short Description :
 Source data used for this repository is same i.e. AWS_SaaS Sales.
-Repository have two parts. First use(Part 1) is to prdict discount for each product using Python. Second use(Part 2) is to analysis of data using Excel.
+Repository have two parts. First use(Part 1) is to predict discount for each product using Python. Second use(Part 2) is to analysis of data using Excel.
 
 
 ![image](https://github.com/Precious-One/AWS-sales/assets/132249223/f8d453d8-37a3-44ef-b06f-f1133e0255a7)
@@ -27,4 +27,11 @@ Repository have two parts. First use(Part 1) is to prdict discount for each prod
 * Performed TimeSeries Analysis, Geographic Analysis, Profitability Analysis and Customer Segmentation.
 * Created charts and Interactive dashboard
 
+## Questions Asked
+* What is best quarter for sale?
+* which region/subregion contribute most/ least in terms of sales?
+* Which region have high potential for growth?
+* What is moving average for every year?
+* Year wise profit distribution w.r.t countries?
+* Top Products, Top Customers and their product cosumption with respect to profit and sales
 #### This repository is totally build from scratch by newbie, your suggestion are always welcome.
